@@ -25,9 +25,9 @@ class MarvelService {
     _transformCharacter = (char) => {
         const charDescription = () => {
             if (!char.description) {
-                return "Sorry, description is missing.";
-            } else if (char.description.length > 230) {
-                return char.description.slice(0, 231) + "...";
+                return "There is no description for this character.";
+            } else if (char.description.length > 215) {
+                return char.description.slice(0, 216) + "...";
             } else {
                 return char.description;
             };
