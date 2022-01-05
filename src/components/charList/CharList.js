@@ -1,4 +1,5 @@
 import {Component} from "react";
+import PropTypes from "prop-types";
 
 import MarvelService from "../../services/MarvelService";
 import Spinner from '../spinner/Spinner';
@@ -75,6 +76,15 @@ class CharList extends Component {
         })
     }
 
+    onCharacterFocus = (event, itemId) => {
+        event.target.classList.add("char__item_selected");
+        this.props.onCharSelected(itemId)
+    }
+
+    onCharacterBlur = (event) => {
+        event.target.classList.remove("char__item_selected");
+    }
+
     // Этот метод создан для оптимизации,
     // чтобы не помещать такую конструкцию в метод render
 
@@ -87,9 +97,12 @@ class CharList extends Component {
 
             return (
                 <li
+                    tabindex="0"
                     className="char__item"
                     key={item.id}
-                    onClick={() => this.props.onCharSelected(item.id)}>
+                    onClick={() => this.props.onCharSelected(item.id)}
+                    onFocus={(event) => this.onCharacterFocus(event, item.id)}
+                    onBlur={this.onCharacterBlur}>
                         <img src={item.thumbnail} alt={item.name} style={imgStyle}/>
                         <div className="char__name">{item.name}</div>
                 </li>
@@ -128,6 +141,10 @@ class CharList extends Component {
             </div>
         )
     }
+}
+
+CharList.propTypes = {
+    onCharSelected: PropTypes.func.isRequired
 }
 
 export default CharList;
