@@ -14,7 +14,7 @@ class CharList extends Component {
         loading: true,
         error: false,
         newItemLoading: false,
-        offset: 1541,
+        offset: 210,
         charEnded: false
     }
 
@@ -23,23 +23,23 @@ class CharList extends Component {
     componentDidMount() {
         this.onRequest();
 
-        window.addEventListener("scroll", this.requestOnScroll);
+        // window.addEventListener("scroll", this.requestOnScroll);
     }
 
     componentDidUpdate() {
     }
 
     componentWillUnmount() {
-        window.removeEventListener("scroll", this.requestOnScroll);
+        // window.removeEventListener("scroll", this.requestOnScroll);
     }
 
-    requestOnScroll = () => {
-        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
-            if (!this.state.false) {
-                this.onRequest(this.state.offset)
-            }
-        }
-    }
+    // requestOnScroll = () => {
+    //     if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+    //         if (!this.state.false) {
+    //             this.onRequest(this.state.offset)
+    //         }
+    //     }
+    // }
 
     onRequest = (offset) => {
         this.onCharListLoading();
@@ -97,7 +97,7 @@ class CharList extends Component {
 
             return (
                 <li
-                    tabindex="0"
+                    tabIndex="0"
                     className="char__item"
                     key={item.id}
                     onClick={() => this.props.onCharSelected(item.id)}
