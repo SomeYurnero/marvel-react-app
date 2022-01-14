@@ -1,10 +1,11 @@
+import {Link} from 'react-router-dom';
 import {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 
 import useMarvelService from "../../services/MarvelService";
 import Spinner from '../spinner/Spinner';
-import Skeleton from '../skeleton/Skeleton';
 import ErrorMessage from '../errorMessage/ErrorMessage';
+import Skeleton from '../skeleton/Skeleton';
 
 import './charInfo.scss';
 
@@ -57,7 +58,9 @@ const View = ({char}) => {
         visibleComics = comics.slice(0, 10).map((item, index) => {
             return (
                 <li key={index} className="char__comics-item">
-                    {item.name}
+                    <Link to={`/comics/${item.resourceURI.substring(43)}`}>
+                        {item.name}
+                    </Link>
                 </li>
             )
         })
