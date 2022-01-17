@@ -1,5 +1,6 @@
 import {useState, useEffect} from "react";
 import PropTypes from "prop-types";
+import {TransitionGroup, CSSTransition} from "react-transition-group";
 
 import useMarvelService from "../../services/MarvelService";
 import Spinner from '../spinner/Spinner';
@@ -48,29 +49,34 @@ const CharList = (props) => {
     }
 
     const renderItems = (arr) => {
-        const items =  arr.map((item) => {
+
+        const items =  arr.map((item, i) => {
             let imgStyle = {'objectFit' : 'cover'};
             if (item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
                 imgStyle = {'objectFit' : 'unset'};
             }
 
             return (
-                <li
-                    tabIndex="0"
-                    className="char__item"
-                    key={item.id}
-                    onClick={() => props.onCharSelected(item.id)}
-                    onFocus={(event) => onCharacterFocus(event, item.id)}
-                    onBlur={onCharacterBlur}>
-                        <img src={item.thumbnail} alt={item.name} style={imgStyle}/>
-                        <div className="char__name">{item.name}</div>
-                </li>
+                <CSSTransition key={item.id} timeout={1000} classNames="char__item">
+                    <li
+                        tabIndex="0"
+                        className="char__item"
+                        onClick={() => props.onCharSelected(item.id)}
+                        onFocus={(event) => onCharacterFocus(event, item.id)}
+                        onBlur={onCharacterBlur}>
+                            <img src={item.thumbnail} alt={item.name} style={imgStyle}/>
+                            <div className="char__name">{item.name}</div>
+                    </li>
+                </CSSTransition>
             )
         });
+
         // А эта конструкция вынесена для центровки спиннера/ошибки
         return (
             <ul className="char__grid">
-                {items}
+                <TransitionGroup component={null}>
+                    {items}
+                </TransitionGroup>
             </ul>
         )
     }
