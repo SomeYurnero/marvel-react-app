@@ -16,10 +16,10 @@ export const useHttp = () => {
             }
 
             const data = await response.json();
-
             setLoading(false);
             return data;
-        } catch(error) {
+        }
+        catch(error) {
             setLoading(false);
             setError(error.message);
             throw error;
