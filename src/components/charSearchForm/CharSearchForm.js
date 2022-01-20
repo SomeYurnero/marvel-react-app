@@ -10,15 +10,16 @@ import "./charSearchForm.scss";
 const CharSearchForm = () => {
 
     const [character, setCharacter] = useState(null);
+    const [characterNameSearching, setCharacterNameSearching] = useState(false);
+    const [previousName, setPreviousName] = useState(null);
 
     const {_apiBase, _apiKey} = useMarvelService();
 
     const getCharacterByName = async (characterName) => {
+            setCharacterNameSearching(true);
             const response = await fetch(`${_apiBase}characters?name=${characterName}&${_apiKey}`);
-
             const character = await response.json();
-            console.log(character);
-
+            setCharacterNameSearching(false);
             if (!character.data.results.length < 1) {
                 setCharacter(character.data.results[0]);
             } else {
@@ -29,14 +30,11 @@ const CharSearchForm = () => {
     const result = character != "error" && character ? (
             <div className="char__search-wrapper">
                 <div className="char__search-success">There is! Visit {character.name} page?</div>
-                <Link to={character.name} className="button button__secondary">
+                <Link to={`character/${character.id}`} className="button button__secondary">
                     <div className="inner">To page</div>
                 </Link>
             </div>
-        ) : null;
-
-
-    const errorMessage = character === "error" ? (
+        ) : character === "error" ? (
             <div className="char__search-error">
                 The character was not found. Check the name and try again
             </div>
@@ -47,34 +45,42 @@ const CharSearchForm = () => {
             <Formik
                 initialValues={{name: ""}}
                 validationSchema={Yup.object({
-                    name: Yup.string()
-                            .required("This field is required")
+                    name: Yup.string().required("This field is required")
                 })}
                 onSubmit={values => {
-                        getCharacterByName(values.name);
+                        if (previousName != values.name) {
+                            getCharacterByName(values.name);
+                            setPreviousName(values.name);
+                        }
                 }}
             >
-                <Form>
-                    <label className="char__search-label" htmlFor="charSearch">Or find a character by name:</label>
-                    <div className="char__search-wrapper">
-                        <Field
-                            id="charSearch"
-                            name="name"
-                            type="text"
-                            placeholder="Enter name"
-                        />
-                        <button
-                            type='submit'
-                            className="button button__main"
-                        >
-                            <div className="inner">find</div>
-                        </button>
-                    </div>
-                    <ErrorMessage className="char__search-error" name="name" component="div"/>
-                </Form>
+                {({handleChange}) => (
+                    <Form>
+                        <label className="char__search-label" htmlFor="charSearch">Or find a character by name:</label>
+                        <div className="char__search-wrapper">
+                            <Field
+                                id="charSearch"
+                                name="name"
+                                type="text"
+                                placeholder="Enter name"
+                                onChange={(event) => {
+                                    handleChange(event);
+                                    setCharacter(null);
+                                }}
+                            />
+                            <button
+                                disabled={characterNameSearching}
+                                type='submit'
+                                className="button button__main"
+                            >
+                                <div className="inner">find</div>
+                            </button>
+                        </div>
+                        <ErrorMessage className="char__search-error" name="name" component="div"/>
+                    </Form>
+                )}
             </Formik>
             {result}
-            {errorMessage}
         </div>
     )
 }

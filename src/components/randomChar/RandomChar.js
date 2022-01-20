@@ -60,6 +60,16 @@ const RandomChar = () => {
 const View = ({char}) => {
     const {name, description, thumbnail, homepage, wiki} = char;
 
+    const charDescription = () => {
+        if (!description) {
+            return "There is no description for this character.";
+        } else if (description.length > 200) {
+            return description.slice(0, 201) + "...";
+        } else {
+            return description;
+        };
+    }
+
     let imgNotFound = {};
     if (thumbnail === "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg") {
         imgNotFound = {objectFit: 'contain'};
@@ -71,7 +81,7 @@ const View = ({char}) => {
             <div className="randomchar__info">
                 <p className="randomchar__name">{name}</p>
                 <p className="randomchar__descr">
-                    {description}
+                    {charDescription()}
                 </p>
                 <div className="randomchar__btns">
                     <a href={homepage} className="button button__main">
